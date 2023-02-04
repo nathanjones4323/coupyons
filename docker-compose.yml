@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  selenium:
+    image: seleniarm/standalone-chromium:latest
+    shm_size: 2gb
+    ports:
+      - 4444:4444
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:4444"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    restart: always
+
+  app:
+    build:
+      context: .
+    command: sh -c "python main.py"
+    restart: on-failure
+    depends_on:
+      - selenium
