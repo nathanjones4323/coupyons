@@ -9,7 +9,6 @@ password = os.environ["albertsons_password"]
 # Selenium Options
 options = Options()
 options.add_argument("--start-maximized")
-# options.add_argument('--headless')
 
 driver = webdriver.Remote("http://selenium:4444/wd/hub", options=options)
 

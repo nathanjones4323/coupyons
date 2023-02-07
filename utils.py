@@ -53,7 +53,8 @@ def login(username, password, driver):
     login = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, 'btnSignIn')))
     login.click()
-    if driver.current_url == "https://www.albertsons.com/account/sign-in.html#error=login_required":
+    time.sleep(2)
+    if driver.current_url in ["https://www.albertsons.com/account/sign-in.html#error=login_required", "https://www.albertsons.com/account/sign-in.html"]:
         albertsons_username.send_keys(username)
         albertsons_password.send_keys(password)
         login.click()
@@ -82,14 +83,14 @@ def find_coupons(driver):
     # Keep clicking load more until its gone
     while check_exists_by_css_selector(driver, '#coupon-grid_0 > div > div.load-more-container > button'):
         load_more = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, '#coupon-grid_0 > div > div.load-more-container > button')))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, '#coupon-grid_0 > div > div.load-more-container > button')))
         load_more.click()
     html = driver.page_source
     # convert to beautiful soup object
     soup = BeautifulSoup(html, 'html.parser')
     coupons = soup.find_all('button', class_= 'btn grid-coupon-btn btn-default')
     print(coupons)
-    coupon_css_list = ['#' + coupon['id'] for coupon in coupons]
+    coupon_css_list = [coupon['id'] for coupon in coupons]
     print(f"{len(coupon_css_list)} Coupons found")
     time.sleep(random.randint(2,4))
     return coupon_css_list
@@ -97,6 +98,6 @@ def find_coupons(driver):
 def clip_all_coupons(driver, coupon_css_list):
     for coupon_css in coupon_css_list:
         clip_coupon = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, coupon_css)))
+        EC.element_to_be_clickable((By.ID, coupon_css)))
         clip_coupon.click()
     print(f"{len(coupon_css_list)} Coupons clipped")
