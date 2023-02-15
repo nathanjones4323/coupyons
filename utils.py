@@ -40,24 +40,30 @@ def click_sign_in(driver):
 
 @timer_func
 def login(username, password, driver):
-    # time.sleep(random.randint(1,3))
-    albertsons_username = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.ID, 'label-email')))
-    # time.sleep(random.randint(1,3))
-    albertsons_username.send_keys(username)
-    albertsons_password = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.ID, 'label-password')))
-    # time.sleep(random.randint(1,3))
-    albertsons_password.send_keys(password)
-    # time.sleep(random.randint(1,3))
-    login = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, 'btnSignIn')))
-    login.click()
-    time.sleep(2)
-    if driver.current_url in ["https://www.albertsons.com/account/sign-in.html#error=login_required", "https://www.albertsons.com/account/sign-in.html"]:
+    try:
+        # time.sleep(random.randint(1,3))
+        albertsons_username = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, 'label-email')))
+        # time.sleep(random.randint(1,3))
         albertsons_username.send_keys(username)
+        albertsons_password = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, 'label-password')))
+        # time.sleep(random.randint(1,3))
         albertsons_password.send_keys(password)
+        # time.sleep(random.randint(1,3))
+        login = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, 'btnSignIn')))
         login.click()
+        time.sleep(2)
+        print(f"WebDriver Current URL {driver.current_url}")
+        if driver.current_url in ["https://www.albertsons.com/account/sign-in.html#error=login_required", "https://www.albertsons.com/account/sign-in.html"]:
+            albertsons_username.send_keys(username)
+            albertsons_password.send_keys(password)
+            login.click()
+    except Exception as e:
+        print(f"WebDriver Current URL {driver.current_url}")
+        print("Fix the login(username, password, driver) function")
+        print(e)
 
 # def change_store_location(driver):
 #     """BROKEN FUNCTION"""
@@ -75,25 +81,30 @@ def login(username, password, driver):
 #     my_store.click()
 @timer_func
 def find_coupons(driver):
-    driver.get("https://www.albertsons.com/foru/coupons-deals.html")
-    if check_exists_by_css_selector(driver, '#onetrust-close-btn-container > button'):
-        cookies = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, '#onetrust-close-btn-container > button')))
-        cookies.click()
-    # Keep clicking load more until its gone
-    while check_exists_by_css_selector(driver, '#coupon-grid_0 > div > div.load-more-container > button'):
-        load_more = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, '#coupon-grid_0 > div > div.load-more-container > button')))
-        load_more.click()
-    html = driver.page_source
-    # convert to beautiful soup object
-    soup = BeautifulSoup(html, 'html.parser')
-    coupons = soup.find_all('button', class_= 'btn grid-coupon-btn btn-default')
-    print(coupons)
-    coupon_css_list = [coupon['id'] for coupon in coupons]
-    print(f"{len(coupon_css_list)} Coupons found")
-    time.sleep(random.randint(2,4))
-    return coupon_css_list
+    try:
+        driver.get("https://www.albertsons.com/foru/coupons-deals.html")
+        if check_exists_by_css_selector(driver, '#onetrust-close-btn-container > button'):
+            cookies = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, '#onetrust-close-btn-container > button')))
+            cookies.click()
+        # Keep clicking load more until its gone
+        while check_exists_by_css_selector(driver, '#coupon-grid_0 > div > div.load-more-container > button'):
+            load_more = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, '#coupon-grid_0 > div > div.load-more-container > button')))
+            load_more.click()
+        time.sleep(random.randint(1,3))
+        html = driver.page_source
+        # convert to beautiful soup object
+        soup = BeautifulSoup(html, 'html.parser')
+        coupons = soup.find_all('button', class_= 'btn grid-coupon-btn btn-default')
+        coupon_css_list = ['#' + coupon['id'] for coupon in coupons]
+        print(f"{len(coupon_css_list)} Coupons found")
+        time.sleep(random.randint(1,3))
+        return coupon_css_list
+    except Exception as e:
+        print("Fix find_coupons(driver) function")
+        print(e)
+
 @timer_func
 def clip_all_coupons(driver, coupon_css_list):
     for coupon_css in coupon_css_list:
@@ -101,3 +112,13 @@ def clip_all_coupons(driver, coupon_css_list):
         EC.element_to_be_clickable((By.ID, coupon_css)))
         clip_coupon.click()
     print(f"{len(coupon_css_list)} Coupons clipped")
+
+def click_sign_out(driver):
+    driver.get("https://www.albertsons.com/")
+    try:
+        sign_out = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, '#menu > div.sidebar-myaccount-flyout > ul > div.sidebar__nav > div > a')))
+        sign_out.click()
+    except Exception as e:
+        print("Fix the click_sign_out() function")
+        print(e)
