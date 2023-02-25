@@ -30,13 +30,17 @@ def check_exists_by_css_selector(driver, css_selector):
 
 @timer_func
 def click_sign_in(driver):
-    # sign_in = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'sign-in-modal-link')))
-    pre_sign_in = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, 'body > div.main-wrapper.www-wrapper.nextgen-main-wrapper > div > div > div:nth-child(1) > div > div > div > div > div.unified-header-v3.unified-header.aem-GridColumn.aem-GridColumn--default--12 > div.unified-header.unified-header--sticky-enabled.header-version-2 > div.menu-nav.unified-walled-header > div > div > div.menu-nav__navigation > ul > li.menu-nav__list-item.first__item > a > svg')))
-    pre_sign_in.click()
-    real_sign_in = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.ID, 'sign-in-modal-link')))
-    real_sign_in.click()
+    try:
+        # sign_in = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'sign-in-modal-link')))
+        pre_sign_in = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, 'body > div.main-wrapper.www-wrapper.nextgen-main-wrapper > div > div > div:nth-child(1) > div > div > div > div > div.unified-header-v3.unified-header.aem-GridColumn.aem-GridColumn--default--12 > div.unified-header.unified-header--sticky-enabled.header-version-2 > div.menu-nav.unified-walled-header > div > div > div.menu-nav__navigation > ul > li.menu-nav__list-item.first__item > a > svg')))
+        pre_sign_in.click()
+        real_sign_in = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, 'sign-in-modal-link')))
+        real_sign_in.click()
+    except Exception as e:
+        print("Fix the click_sign_in() function")
+        print(e)
 
 @timer_func
 def login(username, password, driver):
@@ -44,13 +48,12 @@ def login(username, password, driver):
         # time.sleep(random.randint(1,3))
         albertsons_username = WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located((By.ID, 'label-email')))
-        # time.sleep(random.randint(1,3))
+        time.sleep(0.25)
         albertsons_username.send_keys(username)
         albertsons_password = WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located((By.ID, 'label-password')))
-        # time.sleep(random.randint(1,3))
+        time.sleep(0.25)
         albertsons_password.send_keys(password)
-        # time.sleep(random.randint(1,3))
         login = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, 'btnSignIn')))
         login.click()
@@ -107,15 +110,28 @@ def find_coupons(driver):
 
 @timer_func
 def clip_all_coupons(driver, coupon_css_list):
-    for coupon_css in coupon_css_list:
-        clip_coupon = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.ID, coupon_css)))
-        clip_coupon.click()
-    print(f"{len(coupon_css_list)} Coupons clipped")
+    try:
+        if len(coupon_css_list) == 0 or coupon_css_list == None:
+            print("No coupons website elements found via CSS")
+            print("Fix find_coupons(driver) function")
+        else:
+            # Scroll to top of the page
+            driver.execute_script("window.scrollTo(0, 0)")
+            for coupon_css in coupon_css_list:
+                clip_coupon = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, coupon_css)))
+                clip_coupon.click()
+            print(f"{len(coupon_css_list)} Coupons clipped")
+    except Exception as e:
+        print("Fix clip_all_coupons(driver, coupon_css_list) function")
+        print(e)
 
 def click_sign_out(driver):
     driver.get("https://www.albertsons.com/")
     try:
+        pre_sign_in = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, 'body > div.main-wrapper.www-wrapper.nextgen-main-wrapper > div > div > div:nth-child(1) > div > div > div > div > div.unified-header-v3.unified-header.aem-GridColumn.aem-GridColumn--default--12 > div.unified-header.unified-header--sticky-enabled.header-version-2 > div.menu-nav.unified-walled-header > div > div > div.menu-nav__navigation > ul > li.menu-nav__list-item.first__item > a > svg')))
+        pre_sign_in.click()
         sign_out = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, '#menu > div.sidebar-myaccount-flyout > ul > div.sidebar__nav > div > a')))
         sign_out.click()

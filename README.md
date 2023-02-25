@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://imgur.com/gallery/9V5cutq" alt="Project logo"></a>
+ <img width=200px height=200px src="./logo.png" alt="Project logo"></a>
 </p>
 
 <h3 align="center">Grocery Coupon Clipper</h3>
@@ -41,8 +41,12 @@ Docker ([Docker Desktop comes with Docker](https://www.docker.com/products/docke
 
 Replace the following environment variables in `main.py` with your login credentials:
 
-`os.environ["albertsons_email"]`
-`os.environ["albertsons_password"]`
+`os.environ["albertsons_email_1"]`
+`os.environ["albertsons_password_1"]`
+`os.environ["albertsons_email_2"]`
+`os.environ["albertsons_password_2"]`
+
+If you have more than 2 accounts you want to clip coupons for, you can simply add them the the `usernames` and `passwords` list in order.
 
 Clone the repoisitory
 ```
