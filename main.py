@@ -3,8 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from utils import click_sign_in, clip_all_coupons, find_coupons, login, click_sign_out
 
-usernames = [os.environ["albertsons_email_1"], os.environ["albertsons_email_2"]]
-passwords = [os.environ["albertsons_password_1"], os.environ["albertsons_password_2"]]
+usernames = ["lizette_juarez@ucsb.edu", "natejones4323@gmail.com"]
+passwords = ["ChDa1013", "450030778Nj!"]
 
 
 # Selenium Options
