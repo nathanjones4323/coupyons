@@ -62,3 +62,8 @@ Run the following in your terminal:
 ```
 docker-compose up -d
 ```
+
+> :warning: If you need to rebuild and run the container run this command
+```
+docker-compose up --force-recreate --build -d && docker image prune -f
+```
